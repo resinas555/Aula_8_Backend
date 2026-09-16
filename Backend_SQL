@@ -1,0 +1,112 @@
+CREATE TABLE IF NOT EXISTS clientes (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(100) NOT NULL, 
+  email VARCHAR(100) NOT NULL,
+  estado VARCHAR(2) NOT NULL,
+  saldo DECIMAL(10,2) DEFAULT 0.00,
+  data_nascimento DATE
+);
+
+
+
+CREATE TABLE IF NOT EXISTS produtos(
+  id SERIAL PRIMARY KEY,
+  nome_produto VARCHAR(100) NOT NULL,
+  categoria VARCHAR(50),
+  preco DECIMAL(10,2) NOT NULL
+);
+
+
+INSERT INTO clientes (nome, email, estado, saldo, data_nascimento) VALUES
+('Ana SIlva', 'ana. silva@email.com', 'SP', 450.00, '1995-04-12'),
+('Carlos LIma', 'carlos.lima@email.com', 'RJ', 0.00, '1988-11-23'),
+('Iran Ferreira', 'luvadepedreiro@email.com', 'MG', 80.00, '1992-07-30');
+
+
+INSERT INTO produtos (nome_produto, categoria, preco) VALUES    
+('Notebook Gamer', 'Eletrônicos', 4500.00),
+('Mouse Sem Fio', 'Acessórios', 120.00),
+('Teclado Mecânico', 'Acessórios', 350.00),
+('Monitor 27', 'Eletrônicos', 1400.00),
+('Cadeira Ergonônimca', 'Móveis', 890.00),
+('Fone Bluetooth', 'Áudio', 250.00);
+
+
+SELECT nome, email FROM clientes;
+
+SELECT 
+  nome AS "Nome Completo",
+  data_nascimento AS "Data de Nascimento"
+FROM clientes;
+
+
+SELECT 
+  nome_produto,
+  preco AS "Preço Atual",
+  (preco * 1.10) AS "Preço com 10% Aumento"
+FROM produtos;
+
+SELECT nome_produto, preco 
+FROM produtos
+WHERE preco >= 300.00; 
+
+
+SELECT nome, estado, saldo
+FROM clientes
+WHERE estado = 'SP' AND saldo > 0;
+
+3. CUIDADO COM PRECENDENCIA LÓGICA!
+Clientes de 'SP' OU 'RJ' QUE tenham saldo maior que 100
+Sempre use Parenteses para reagrupar o OR
+SELECT nome, estado, saldo
+FROM clientes
+WHERE (estado = 'SP' OR estado = 'RJ') AND saldo > 100.00;   
+
+
+SELECT nome_produto, preco
+FROM produtos
+ORDER BY preco DESC
+LIMIT 3;
+
+SELECT nome, estado, saldo
+FROM clientes
+ORDER BY saldo DESC, nome ASC;  
+
+
+
+
+
+Tabela de Cursos de Música
+CREATE TABLE IF NOT EXISTS cursos_musica (
+    id SERIAL PRIMARY KEY,
+    instrumento VARCHAR(60) NOT NULL,
+    professor VARCHAR(80) NOT NULL,
+    modalidade VARCHAR(30) NOT NULL,
+    mensalidade DECIMAL(10,2) NOT NULL,
+    horas_mensais INT NOT NULL,
+    alunos_matriculados INT NOT NULL
+);
+
+INSERT INTO cursos_musica (instrumento, professor, modalidade, mensalidade, horas_mensais, alunos_matriculados) VALUES
+('Guitarra Heavy Rock & Blues', 'Prof. Juninho Afram', 'Individual', 320.00, 4, 14),
+('Piano Clássico & Teclado', 'Dra. Elisa Meyer', 'Individual', 360.00, 4, 18),
+('Canto Popular & Respiração', 'Prof. Mauro Lúcio', 'Em Grupo', 220.00, 6, 25),
+('Bateria Acústica & Groove', 'Prof. Igor Caravela', 'Individual', 290.00, 4, 10),
+('Baixo Elétrico & Slap', 'Prof. Celso Pixinga', 'Individual', 310.00, 4, 8),
+('Violão Popular & Fingerstyle', 'Prof. Yamandu Costa', 'Em Grupo', 190.00, 6, 30);
+
+SELECT instrumento AS "Instrumento Ensinado", professor AS "Mestre Instrutor"
+FROM cursos_musica;
+
+SELECT instrumento, mensalidade, horas_mensais,
+ (mensalidade / horas_mensais) 
+AS "Preço por Hora de Aula"
+FROM cursos_musica;
+
+SELECT * FROM cursos_musica
+WHERE modalidade = 'Individual' AND mensalidade > 300.00;
+
+SELECT instrumento, professor, alunos_matriculados 
+FROM cursos_musica 
+ORDER BY alunos_matriculados 
+DESC LIMIT 2
